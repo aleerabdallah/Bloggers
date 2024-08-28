@@ -17,10 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from django.conf import settings
+from django.conf.urls.static import static
+from core.settings.common import DEBUG
+from debug_toolbar.toolbar import debug_toolbar_urls
+
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include('blog_app.urls')),
+    path('newsletter/', include('newsletter.urls')),
 
 
     # YOUR PATTERNS
@@ -28,10 +36,22 @@ urlpatterns = [
     # Optional UI:
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-]
+
+    # Tinymce editor
+    # path('tinymce/', include('tinymce.urls')),
+]  
+
+if DEBUG:
+    urlpatterns = [
+        *urlpatterns,
+    ] + debug_toolbar_urls()
 
 
+urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
 
+
+# if DEBUG:
+#     urlpatterns + debug_toolbar_urls()
 
 
 

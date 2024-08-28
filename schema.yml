@@ -152,7 +152,9 @@ paths:
   /blog/posts/:
     get:
       operationId: blog_posts_retrieve
-      description: An EndPoint for Listing all posts
+      description: An EndPoint for deleting a NewsletterOnly allows a Newsletter to
+        be deleted if the user is authenticated and at the same time the owner
+      summary: Retrieve all Posts
       tags:
       - blog
       security:
@@ -167,21 +169,44 @@ paths:
           description: ''
     post:
       operationId: blog_posts_create
-      description: An EndPoint for creating a Post
+      description: An EndPoint for deleting a NewsletterOnly allows a Newsletter to
+        be deleted if the user is authenticated and at the same time the owner
+      summary: Create a new Post
       tags:
       - blog
       requestBody:
         content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Post'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Post'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Post'
+              $ref: '#/components/schemas/PostRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostRequest'
         required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePost'
+          description: ''
+  /blog/posts/{id}/:
+    get:
+      operationId: blog_posts_retrieve_2
+      description: An EndPoint for deleting a NewsletterOnly allows a Newsletter to
+        be deleted if the user is authenticated and at the same time the owner
+      summary: Retrieve a single Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - blog
       security:
       - cookieAuth: []
       - {}
@@ -192,8 +217,450 @@ paths:
               schema:
                 $ref: '#/components/schemas/Post'
           description: ''
+    patch:
+      operationId: blog_posts_partial_update
+      description: An EndPoint for deleting a NewsletterOnly allows a Newsletter to
+        be deleted if the user is authenticated and at the same time the owner
+      summary: Update a Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - blog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreatePostRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCreatePostRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCreatePostRequest'
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePost'
+          description: ''
+    delete:
+      operationId: blog_posts_destroy
+      description: An EndPoint for deleting a NewsletterOnly allows a Newsletter to
+        be deleted if the user is authenticated and at the same time the owner
+      summary: Delete or Destroy a Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /newsletter/confirm/{id}/{conf_num}/:
+    get:
+      operationId: newsletter_confirm_retrieve
+      description: An EndPoint for for Email Confirmation
+      summary: Confirm subscription email
+      parameters:
+      - in: path
+        name: conf_num
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: conf_num
+        schema:
+          type: integer
+        description: An integer conf_num
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: id
+        schema:
+          type: string
+        description: A string id
+        required: true
+      tags:
+      - newsletter
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /newsletter/newsletter/:
+    get:
+      operationId: newsletter_newsletter_list
+      description: Returns a List of Newsletters or a particular Newsletter with an
+        ID
+      summary: List all Newsletters
+      tags:
+      - newsletter
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreateNewsLetter'
+          description: ''
+    post:
+      operationId: newsletter_newsletter_create
+      description: An EndPoint for creating a Newsletter
+      summary: Create a Newsletter
+      tags:
+      - newsletter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNewsLetterRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateNewsLetter'
+          description: ''
+  /newsletter/newsletter/{id}/:
+    get:
+      operationId: newsletter_newsletter_retrieve
+      description: An EndPoint for retrieving an individual Newsletter
+      summary: Retrieve an individual Newsletter
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - newsletter
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateNewsLetter'
+          description: ''
+    patch:
+      operationId: newsletter_newsletter_partial_update
+      description: An EndPoint for editing a Newsletter
+      summary: Update a Newsletter
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - newsletter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateNewsLetterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateNewsLetterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateNewsLetterRequest'
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateNewsLetter'
+          description: ''
+    delete:
+      operationId: newsletter_newsletter_destroy
+      description: An EndPoint for deleting a NewsletterOnly allows a Newsletter to
+        be deleted if the user is authenticated and at the same time the owner
+      summary: Delete a Newsletter
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - newsletter
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /newsletter/newsletter/send/{id}/:
+    patch:
+      operationId: newsletter_newsletter_send_partial_update
+      description: An EndPoint for deleting a NewsletterOnly allows a Newsletter to
+        be deleted if the user is authenticated and at the same time the owner
+      summary: Send a Newsletter
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: pk
+        schema:
+          type: integer
+        description: An integer pk
+        required: true
+      tags:
+      - newsletter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateNewsLetterRequest'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /newsletter/subscribe/:
+    post:
+      operationId: newsletter_subscribe_create
+      description: An Endpoint for subscribing to the Newsletter List
+      summary: Subscribe to a newsletter
+      tags:
+      - newsletter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberSerializersRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberSerializers'
+          description: ''
 components:
   schemas:
+    Author:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 255
+      required:
+      - email
+    AuthorRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 255
+      required:
+      - email
+    CreateNewsLetter:
+      type: object
+      properties:
+        subject:
+          type: string
+          maxLength: 100
+        content:
+          type: string
+          maxLength: 2000
+        id:
+          type: integer
+          readOnly: true
+        author:
+          allOf:
+          - $ref: '#/components/schemas/Author'
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/CreateNewsLetterStatusEnum'
+          readOnly: true
+        written_on:
+          type: string
+          format: date-time
+          readOnly: true
+        last_modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - author
+      - content
+      - id
+      - last_modified
+      - status
+      - subject
+      - written_on
+    CreateNewsLetterRequest:
+      type: object
+      properties:
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 100
+        content:
+          type: string
+          minLength: 1
+          maxLength: 2000
+      required:
+      - content
+      - subject
+    CreateNewsLetterStatusEnum:
+      enum:
+      - Draft
+      - Sent
+      type: string
+      description: |-
+        * `Draft` - Draft
+        * `Sent` - Sent
+    CreatePost:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        slug:
+          type: string
+          nullable: true
+          maxLength: 200
+          pattern: ^[-a-zA-Z0-9_]+$
+        author:
+          type: array
+          items:
+            type: integer
+        category:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: integer
+        image:
+          type: string
+          format: uri
+          nullable: true
+        description:
+          type: string
+          nullable: true
+          maxLength: 255
+        summary:
+          type: string
+          nullable: true
+        body:
+          type: string
+          nullable: true
+      required:
+      - author
+      - category
+      - title
+    PatchedCreateNewsLetterRequest:
+      type: object
+      properties:
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 100
+        content:
+          type: string
+          minLength: 1
+          maxLength: 2000
+    PatchedCreatePostRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        slug:
+          type: string
+          nullable: true
+          maxLength: 200
+          pattern: ^[-a-zA-Z0-9_]+$
+        author:
+          type: array
+          items:
+            type: integer
+        category:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: integer
+        image:
+          type: string
+          format: binary
+          nullable: true
+        description:
+          type: string
+          nullable: true
+          maxLength: 255
+        summary:
+          type: string
+          nullable: true
+        body:
+          type: string
+          nullable: true
     Post:
       type: object
       properties:
@@ -205,6 +672,7 @@ components:
           maxLength: 200
         slug:
           type: string
+          nullable: true
           maxLength: 200
           pattern: ^[-a-zA-Z0-9_]+$
         image:
@@ -222,7 +690,7 @@ components:
           type: string
           nullable: true
         status:
-          $ref: '#/components/schemas/StatusEnum'
+          $ref: '#/components/schemas/PostStatusEnum'
         published_on:
           type: string
           format: date-time
@@ -246,10 +714,51 @@ components:
       - category
       - id
       - published_on
-      - slug
       - title
       - updated_on
-    StatusEnum:
+    PostRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        slug:
+          type: string
+          nullable: true
+          maxLength: 200
+          pattern: ^[-a-zA-Z0-9_]+$
+        image:
+          type: string
+          format: binary
+          nullable: true
+        description:
+          type: string
+          nullable: true
+          maxLength: 255
+        summary:
+          type: string
+          nullable: true
+        body:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/PostStatusEnum'
+        category:
+          type: integer
+        author:
+          type: array
+          items:
+            type: integer
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - author
+      - category
+      - title
+    PostStatusEnum:
       enum:
       - p
       - d
@@ -261,6 +770,33 @@ components:
         * `d` - Draft
         * `w` - Withdrawn
         * `f` - Future
+    SubscriberSerializers:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        conf_num:
+          type: string
+          readOnly: true
+        confirmed:
+          type: boolean
+          readOnly: true
+      required:
+      - conf_num
+      - confirmed
+      - email
+    SubscriberSerializersRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 255
+      required:
+      - email
   securitySchemes:
     cookieAuth:
       type: apiKey
