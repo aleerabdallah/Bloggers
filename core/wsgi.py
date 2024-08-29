@@ -12,6 +12,7 @@ import os
 from django.core.wsgi import get_wsgi_application
 from django.conf.global_settings import DEBUG
 
+
 if DEBUG:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings.dev')
 else:

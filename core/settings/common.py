@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+
 import os
 import sys
 from pathlib import Path
@@ -152,7 +153,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -223,7 +224,7 @@ CORS_ALLOW_HEADERS = (
 
 
 
-MEDIA_URL = 'media/'
+# MEDIA_URL = 'media/'
 
 
 CLOUDINARY_STORAGE = {
@@ -231,10 +232,10 @@ CLOUDINARY_STORAGE = {
     'API_KEY': os.getenv('API_KEY'),
     'API_SECRET': os.getenv('API_SECRET'),
     'SECURE': True,
-    'MEDIA_TAG': 'media',
+    'MEDIA_TAG': 'userupload',
     'INVALID_VIDEO_ERROR_MESSAGE': 'Please upload a valid video file.',
     'EXCLUDE_DELETE_ORPHANED_MEDIA_PATHS': (),
-    'STATIC_TAG': 'static',
+    'STATIC_TAG': 'staticasset',
     'STATICFILES_MANIFEST_ROOT': os.path.join(BASE_DIR, 'manifest'),
     'STATIC_IMAGES_EXTENSIONS': [
         'jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr',
@@ -244,5 +245,5 @@ CLOUDINARY_STORAGE = {
     'PREFIX': ''
 }
 
-CLOUDINARY_URL = 'cloudinary://363954394722362:zBF2rxmNQaVBDL5OPasRA40JkXY@dyzngsckn'#os.getenv('CLOUDINARY_URL')
+CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
 

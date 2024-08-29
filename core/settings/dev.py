@@ -37,6 +37,15 @@ EMAIL_USER_SSL = False
 
 
 
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
+STATIC_URL = '/static/'
+
+
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'staticfiles'
+]
 
 
