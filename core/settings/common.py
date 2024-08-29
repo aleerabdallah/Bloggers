@@ -52,9 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',
     'django.contrib.staticfiles',
-    'cloudinary',
 
     # build-in apps
     'accounts',
@@ -221,29 +219,4 @@ CORS_ALLOW_HEADERS = (
 )
 
 
-
-
-
-# MEDIA_URL = 'media/'
-
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUD_NAME'),
-    'API_KEY': os.getenv('API_KEY'),
-    'API_SECRET': os.getenv('API_SECRET'),
-    'SECURE': True,
-    'MEDIA_TAG': 'userupload',
-    'INVALID_VIDEO_ERROR_MESSAGE': 'Please upload a valid video file.',
-    'EXCLUDE_DELETE_ORPHANED_MEDIA_PATHS': (),
-    'STATIC_TAG': 'staticasset',
-    'STATICFILES_MANIFEST_ROOT': os.path.join(BASE_DIR, 'manifest'),
-    'STATIC_IMAGES_EXTENSIONS': [
-        'jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr',
-        'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico'
-    ],
-    'MAGIC_FILE_PATH': 'magic',
-    'PREFIX': ''
-}
-
-CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
 

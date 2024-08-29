@@ -37,15 +37,22 @@ EMAIL_USER_SSL = False
 
 
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+
+
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/' 
 
 
-
-STATICFILES_DIRS = [
-    BASE_DIR / 'staticfiles'
-]
-
+# MEDIA FIles
+MEDIA_ROOT = os.path.join(BASE_DIR, "Techbros/")
 
