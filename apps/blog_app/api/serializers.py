@@ -1,16 +1,35 @@
 from rest_framework import serializers
 from ..models import Post, Category, Tag 
+from accounts.models import UserAccount
 
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccount
+        fields = ['id', 'first_name', 'last_name', 'picture']
 
 
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name']
 
 
 class PostSerializer(serializers.ModelSerializer):
+    author = UserSerializer()
+    category = CategorySerializer()
+    tags = TagSerializer(many=True)
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ['id', 'title', 'slug', 'author', 'category', 'tags', 'image', 'description', 'summary', 'body', 'status', 'published_on']
 
 
     # title = models.CharField(max_length=200, unique=True)

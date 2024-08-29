@@ -51,7 +51,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
 
     # build-in apps
     'accounts',
@@ -62,6 +64,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
     'drf_spectacular_sidecar',  # required for Django collectstatic discovery
+
 
     # 'tinymce',
 
@@ -179,8 +182,8 @@ REST_FRAMEWORK = {
 
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Blog DRF API',
-    'DESCRIPTION': 'This is our blog app',
+    'TITLE': 'Blog API',
+    'DESCRIPTION': '<p style="font-size: 2rem;">Name: Web API currently supports a blogging system</p>',
     'VERSION': '1.0',
     'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
@@ -221,3 +224,25 @@ CORS_ALLOW_HEADERS = (
 
 
 MEDIA_URL = 'media/'
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUD_NAME'),
+    'API_KEY': os.getenv('API_KEY'),
+    'API_SECRET': os.getenv('API_SECRET'),
+    'SECURE': True,
+    'MEDIA_TAG': 'media',
+    'INVALID_VIDEO_ERROR_MESSAGE': 'Please upload a valid video file.',
+    'EXCLUDE_DELETE_ORPHANED_MEDIA_PATHS': (),
+    'STATIC_TAG': 'static',
+    'STATICFILES_MANIFEST_ROOT': os.path.join(BASE_DIR, 'manifest'),
+    'STATIC_IMAGES_EXTENSIONS': [
+        'jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr',
+        'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico'
+    ],
+    'MAGIC_FILE_PATH': 'magic',
+    'PREFIX': ''
+}
+
+CLOUDINARY_URL = 'cloudinary://363954394722362:zBF2rxmNQaVBDL5OPasRA40JkXY@dyzngsckn'#os.getenv('CLOUDINARY_URL')
+

@@ -270,6 +270,54 @@ paths:
       responses:
         '204':
           description: No response body
+  /blog/posts/category/{name}/:
+    get:
+      operationId: blog_posts_category_retrieve
+      description: An EndPoint for deleting a NewsletterOnly allows a Newsletter to
+        be deleted if the user is authenticated and at the same time the owner
+      summary: Get all posts related to a category
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+  /blog/posts/tag/{name}/:
+    get:
+      operationId: blog_posts_tag_retrieve
+      description: An EndPoint for deleting a NewsletterOnly allows a Newsletter to
+        be deleted if the user is authenticated and at the same time the owner
+      summary: Get all posts related to a Tag
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
   /newsletter/confirm/{id}/{conf_num}/:
     get:
       operationId: newsletter_confirm_retrieve
@@ -517,6 +565,27 @@ components:
           maxLength: 255
       required:
       - email
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+      required:
+      - id
+      - name
+    CategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+      required:
+      - name
     CreateNewsLetter:
       type: object
       properties:
@@ -613,6 +682,7 @@ components:
       required:
       - author
       - category
+      - tags
       - title
     PatchedCreateNewsLetterRequest:
       type: object
@@ -670,11 +740,16 @@ components:
         title:
           type: string
           maxLength: 200
-        slug:
-          type: string
-          nullable: true
-          maxLength: 200
-          pattern: ^[-a-zA-Z0-9_]+$
+        author:
+          type: array
+          items:
+            type: integer
+        category:
+          $ref: '#/components/schemas/Category'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
         image:
           type: string
           format: uri
@@ -695,27 +770,13 @@ components:
           type: string
           format: date-time
           readOnly: true
-        updated_on:
-          type: string
-          format: date-time
-          readOnly: true
-        category:
-          type: integer
-        author:
-          type: array
-          items:
-            type: integer
-        tags:
-          type: array
-          items:
-            type: integer
       required:
       - author
       - category
       - id
       - published_on
+      - tags
       - title
-      - updated_on
     PostRequest:
       type: object
       properties:
@@ -723,11 +784,16 @@ components:
           type: string
           minLength: 1
           maxLength: 200
-        slug:
-          type: string
-          nullable: true
-          maxLength: 200
-          pattern: ^[-a-zA-Z0-9_]+$
+        author:
+          type: array
+          items:
+            type: integer
+        category:
+          $ref: '#/components/schemas/CategoryRequest'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagRequest'
         image:
           type: string
           format: binary
@@ -744,19 +810,10 @@ components:
           nullable: true
         status:
           $ref: '#/components/schemas/PostStatusEnum'
-        category:
-          type: integer
-        author:
-          type: array
-          items:
-            type: integer
-        tags:
-          type: array
-          items:
-            type: integer
       required:
       - author
       - category
+      - tags
       - title
     PostStatusEnum:
       enum:
@@ -797,6 +854,27 @@ components:
           maxLength: 255
       required:
       - email
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 60
+      required:
+      - id
+      - name
+    TagRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 60
+      required:
+      - name
   securitySchemes:
     cookieAuth:
       type: apiKey

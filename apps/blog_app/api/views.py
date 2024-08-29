@@ -2,11 +2,11 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from .serializers import PostSerializer, CreatePostSerializer
-from ..models import Post
+from ..models import Post, Category, Tag
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.renderers import MultiPartRenderer, JSONRenderer
 from rest_framework.parsers import MultiPartParser, FormParser
-
+from rest_framework import status
 
 
 
@@ -27,7 +27,8 @@ class PostsAPIView(APIView):
     )
     def get(self, request: Request) -> Response:
         if request.version == "v1.0":
-            posts = Post.objects.all()
+            # posts = Post.objects.all()
+            posts = Post.objects.select_related("category").prefetch_related("tags").filter(status=Post.PUBLISHED)
             print(request.version)
             serializer = PostSerializer(posts, many=True)
             return Response(serializer.data)
@@ -63,7 +64,7 @@ class PostAPIView(APIView):
     serializer_class = PostSerializer
     @extend_schema(
         methods=("GET",),
-        parameters=[OpenApiParameter("pk", type=int, exclude=True), ],
+        parameters=[OpenApiParameter("slug", type=str, exclude=True), ],
         summary="Retrieve a single Post",
         description=(
             "An EndPoint for deleting a Newsletter"
@@ -71,11 +72,12 @@ class PostAPIView(APIView):
         ),
         responses=PostSerializer(),
     )
-    def get(self, request: Request, pk: int = None) -> Response:
+    def get(self, request: Request, slug: str = None) -> Response:
         if request.version == "v1.0":
-            if pk:
+            if slug:
                 try:
-                    post = Post.objects.get(id=pk)
+                    post = Post.objects.get(slug=slug)
+                    print(post.tags)
                     serializer = PostSerializer(post)
                     return Response(serializer.data)
     
@@ -115,4 +117,68 @@ class PostAPIView(APIView):
     def delete(self, request: Request, pk: int = None, formate=None) -> Response:
         if request.version == "v1.0":
             return Response({"status": "ok"})
+
+
+
+
+class CategoryAPIView(APIView):
+    serializer_class = PostSerializer
+    
+    @extend_schema(
+        methods=("GET",),
+        parameters=[OpenApiParameter("name", type=str, exclude=True), ],
+        summary="Get all posts related to a category",
+        description=(
+            "An EndPoint for deleting a Newsletter"
+            "Only allows a Newsletter to be deleted if the user is authenticated and at the same time the owner"
+        ),
+        # responses=CreatePostSerializer(),
+    )
+    def get(self, request: Request, name: str = None) -> Response:
+        if request.version == "v1.0":
+            if name:
+                name = name.capitalize()
+                try:
+                    category = Category.objects.get(name=name)
+                    # posts = Post.objects.select_related().filter(category=category)
+                    # The following serializer should just return a post image, title, description, author
+                    posts = category.posts.all()
+                    serializer = PostSerializer(posts, many=True)
+                    return Response(serializer.data)
+                
+                except Category.DoesNotExist:
+                    pass
+
+
+
+
+class TagAPIView(APIView):
+    serializer_class = PostSerializer
+
+    @extend_schema(
+        methods=("GET",),
+        parameters=[OpenApiParameter("name", type=str, exclude=True), ],
+        summary="Get all posts related to a Tag",
+        description=(
+            "An EndPoint for deleting a Newsletter"
+            "Only allows a Newsletter to be deleted if the user is authenticated and at the same time the owner"
+        ),
+        # responses=CreatePostSerializer(),
+    )
+    def get(self, request: Request, name: str = None) -> Response:
+        if request.version == "v1.0":
+            if name:
+                try:
+                    # tag = Tag.objects.get(name=name)
+                    # The following serializer should just return a post image, title, description, author
+                    # related_posts = tag.posts.all()
+
+                    tag = Tag.objects.prefetch_related("posts").get(name=name)
+                    related_posts = tag.posts.all()
+                    serializer = PostSerializer(related_posts, many=True)
+                    return Response(serializer.data)
+                
+                except Category.DoesNotExist:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
+
 

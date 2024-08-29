@@ -27,6 +27,19 @@ class Category(models.Model):
 
 
 
+
+class Tag(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+    
+    # def get_absolute_url(self):
+    #     return reverse
+
+
+
+
 class Post(models.Model):
     PUBLISHED = "p"
     DRAFT = "d"
@@ -44,11 +57,11 @@ class Post(models.Model):
     slug = models.SlugField(null=True, blank=True, unique=True, max_length=200)
     author = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="posts")
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="posts")
-    tags = models.ManyToManyField('Tag', blank=True)
-    image = ResizedImageField(null=True, blank=True)
-    description = models.CharField(max_length=255, blank=True, null=True)
-    summary = models.TextField(blank=True, null=True)
-    body = HTMLField(blank=True, null=True)
+    tags = models.ManyToManyField(Tag, related_name="posts")
+    image = ResizedImageField(size=[600, 600], quality=85, upload_to="Techbros/Post_Thumbnails")
+    description = models.CharField(max_length=255)
+    summary = models.TextField()
+    body = HTMLField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=DRAFT)
     published_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -83,10 +96,6 @@ class Post(models.Model):
 
 
 
-class Tag(models.Model):
-    name = models.CharField(max_length=60, unique=True)
 
-    def __str__(self) -> str:
-        return self.name
 
 

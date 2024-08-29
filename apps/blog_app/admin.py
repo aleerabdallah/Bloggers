@@ -46,6 +46,7 @@ class CategoryAdmin(ModelAdmin):
     list_filter_submit = True
     list_display = ['id','name']
     list_display_links = ['id', 'name']
+    prepopulated_fields = {'slug': ('name',)}
 
 
 admin.site.register(Post, PostAdmin)

@@ -22,6 +22,7 @@ DATABASES = {
 }
 
 
+
 # GMAIL_HOST = smtp.gmail.com
 # GMAIL_HOST_USER= juniorab444@gmail.com
 # GMAIL_HOST_PASSWORD= vapouwanoenrpblv
@@ -33,4 +34,9 @@ EMAIL_HOST_USER = os.environ.get("DEV_EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("DEV_EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 EMAIL_USER_SSL = False
+
+
+
+
+
 

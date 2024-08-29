@@ -6,6 +6,7 @@ __pycache__/
 
 .env
 
+Techbros/
 
 # C extensions
 *.so
