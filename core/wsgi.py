@@ -10,9 +10,9 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
-from django.conf import settings
+from django.conf.global_settings import DEBUG
 
-if settings.DEBUG:
+if DEBUG:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings.dev')
 else:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings.prod')
