@@ -8,6 +8,9 @@ __pycache__/
 
 Techbros/
 
+# STATICFILES 
+Tech/
+
 # C extensions
 *.so
 

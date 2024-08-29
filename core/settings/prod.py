@@ -33,7 +33,7 @@ MEDIA_URL = '/media/'
 
 
 # Static Files
-STATIC_ROOT = os.path.join(BASE_DIR, 'Tech/staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 
