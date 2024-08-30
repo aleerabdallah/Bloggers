@@ -12,7 +12,7 @@ class UserAdmin(ModelAdmin):
 	list_display_links = ['image_tag', 'email', 'username']
 
 	def image_tag(self, obj):
-		return format_html('<img src="{}" width=80 height=60 style="border-radius: 50px;"/>'.format(obj.picture.url))
+		return format_html('<img src="{}" width=80 height=60 style="border-radius: 50px;"/>'.format(obj.picture.url)) if obj.picture else ""
 	
 	image_tag.short_description = "Image"
 
