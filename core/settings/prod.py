@@ -1,7 +1,6 @@
 from .common import *
 from django.conf.global_settings import DATABASES
 import dj_database_url
-from . import storage_backends
 
 
 # DATABASE

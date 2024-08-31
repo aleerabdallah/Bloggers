@@ -1,6 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from .serializers import PostSerializer, CreatePostSerializer
 from ..models import Post, Category, Tag
 from drf_spectacular.utils import extend_schema, OpenApiParameter
@@ -13,6 +15,8 @@ from rest_framework import status
 
 
 class PostsAPIView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
     serializer_class = PostSerializer
 
@@ -61,6 +65,8 @@ class PostsAPIView(APIView):
 
 
 class PostAPIView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     @extend_schema(
         methods=("GET",),
@@ -122,6 +128,8 @@ class PostAPIView(APIView):
 
 
 class CategoryAPIView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     
     @extend_schema(
@@ -153,6 +161,8 @@ class CategoryAPIView(APIView):
 
 
 class TagAPIView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
 
     @extend_schema(

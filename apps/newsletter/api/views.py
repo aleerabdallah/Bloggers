@@ -81,7 +81,7 @@ class ConfirmSubscribtionEmailAPIView(APIView):
 
 
 class CreateNewsLetterAPIView(APIView):
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticated]
     authentication_classes = [SessionAuthentication]
     parser_classes = [JSONParser]
     http_method_names = ['get', 'post', 'patch', 'delete']
@@ -142,7 +142,8 @@ class CreateNewsLetterAPIView(APIView):
 
 
 class NewsletterAPIView(APIView):
-
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
         methods=("GET",),
         parameters=[OpenApiParameter("pk", type=int, exclude=True)],

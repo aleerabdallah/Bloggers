@@ -1,13 +1,9 @@
 from io import BytesIO
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django_resized import ResizedImageField
 from core.settings.storage_backends import PrivateMediaStorage
-from django.conf import global_settings
-from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 from PIL import Image
-from django.core.files.storage import Storage
 from core.settings.common import DEBUG
 
 
