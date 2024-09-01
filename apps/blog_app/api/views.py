@@ -9,6 +9,8 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.renderers import MultiPartRenderer, JSONRenderer
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework import permissions
 
 
 
@@ -16,7 +18,7 @@ from rest_framework import status
 
 class PostsAPIView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     parser_classes = [MultiPartParser, FormParser]
     serializer_class = PostSerializer
 
@@ -66,7 +68,7 @@ class PostsAPIView(APIView):
 
 class PostAPIView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     @extend_schema(
         methods=("GET",),
@@ -84,7 +86,7 @@ class PostAPIView(APIView):
                 try:
                     post = Post.objects.get(slug=slug)
                     print(post.tags)
-                    serializer = PostSerializer(post)
+                    serializer = PostSerializer(post, context={'request': request})
                     return Response(serializer.data)
     
                 except Post.DoesNotExist:
@@ -129,7 +131,6 @@ class PostAPIView(APIView):
 
 class CategoryAPIView(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     
     @extend_schema(
@@ -142,6 +143,7 @@ class CategoryAPIView(APIView):
         ),
         # responses=CreatePostSerializer(),
     )
+
     def get(self, request: Request, name: str = None) -> Response:
         if request.version == "v1.0":
             if name:
@@ -155,7 +157,7 @@ class CategoryAPIView(APIView):
                     return Response(serializer.data)
                 
                 except Category.DoesNotExist:
-                    pass
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 

@@ -86,9 +86,6 @@ class CreateNewsLetterAPIView(APIView):
     parser_classes = [JSONParser]
     http_method_names = ['get', 'post', 'patch', 'delete']
 
-    def get_object(self):
-        return Newletter.objects.get(pk=self.kwargs['pk'])
-
     @extend_schema(
         methods=("GET",),
         # parameters=[OpenApiParameter("pk", exclude=True)],
@@ -144,6 +141,10 @@ class CreateNewsLetterAPIView(APIView):
 class NewsletterAPIView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return Newletter.objects.get(pk=self.kwargs['pk'])
+    
     @extend_schema(
         methods=("GET",),
         parameters=[OpenApiParameter("pk", type=int, exclude=True)],
@@ -152,14 +153,16 @@ class NewsletterAPIView(APIView):
         # request=CreateNewsLetterSerializer(),
         responses=CreateNewsLetterSerializer(),
     )
+    
     def get(self, request: Request, pk: int = None) -> Response:
         if request.version == "v1.0":
             if pk:
-                newsletter = self.get_object()
-                if newsletter is not None:
+                try:
+                    newsletter = self.get_object()
                     serializer = CreateNewsLetterSerializer(newsletter)
                     return Response(serializer.data)
-                return Response({"Status": "object not found"})
+                except Newletter.DoesNotExist:
+                    return Response({"Status": "object not found"})
 
     @extend_schema(
         methods=("PATCH",),
@@ -200,13 +203,10 @@ class NewsletterAPIView(APIView):
         responses=CreateNewsLetterSerializer(),
     )
     def delete(self, request: Request, pk: int, *args, **kwargs) -> Response:
-        print(request.user)
-        print(pk)
         if request.version == "v1.0":
             if request.user.is_staff:
                 if pk:
                     newsletter = Newletter.objects.get(id=pk)
-                    print(newsletter)
                     self.check_object_permissions(request, newsletter)
                     newsletter.delete()
                     return Response(status=status.HTTP_204_NO_CONTENT)
